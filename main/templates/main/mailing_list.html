@@ -1,0 +1,10 @@
+{% extends 'main/base.html' %}
+{% block content %}
+<main class="flex-shrink-0 mx-3">
+    <div class="list-group">
+        {% for mailing in mailings %}
+        <a href="#" class="list-group-item list-group-item-action">{{ mailing.title }}</a>
+        {% endfor %}
+    </div>
+</main>
+{% endblock %}

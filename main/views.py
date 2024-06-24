@@ -9,6 +9,16 @@ class MailingListView(ListView):
     template_name = 'main/mailing_list.html'
     context_object_name = 'mailings'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        if self.request.resolver_match:
+            context['current_url_name'] = self.request.resolver_match.url_name
+        else:
+            context['current_url_name'] = None
+
+        return context
+
 
 class MailingDetailView(DetailView):
     model = Mailing

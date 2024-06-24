@@ -51,7 +51,7 @@ class Mailing(models.Model):
 
 class MailingAttempt(models.Model):
     mailing = models.ForeignKey(Mailing, on_delete=models.CASCADE, verbose_name='Рассылка')
-    time = models.DateTimeField(verbose_name='Дата и время попытки отправки')
+    time = models.DateTimeField(auto_now_add=True, verbose_name='Дата и время попытки отправки')
     status = models.CharField(max_length=10, choices=Mailing.STATUS_CHOICES, verbose_name='Статус попытки отправки')
 
     def __str__(self):

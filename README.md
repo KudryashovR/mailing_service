@@ -1,1 +1,1 @@
-# mailing_service
+# Mailing List management Service

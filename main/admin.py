@@ -10,5 +10,4 @@ class MailingAdmin(admin.ModelAdmin):
 
 @admin.register(Client)
 class ClientAdmin(admin.ModelAdmin):
-    list_display = ('email', 'last_name', 'first_name', 'second_name', 'comment')
-
+    list_display = ('email', 'get_initials')

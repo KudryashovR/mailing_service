@@ -25,6 +25,9 @@ class MailingDetailView(DetailView):
     template_name = 'main/mailing_detail.html'
     context_object_name = 'mailing'
 
+    def dysplay_clients(self, obj):
+        return ', '.join([client.get_full_name() for client in obj.clients.all()])
+
 
 class MailingCreateView(CreateView):
     model = Mailing

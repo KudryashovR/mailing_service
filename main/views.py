@@ -56,4 +56,4 @@ class MailingUpdateView(UpdateView):
 class MailingDeleteView(DeleteView):
     model = Mailing
     template_name = 'main/mailing_confirm_delete.html'
-    success_url = reverse_lazy('mailing_list')
+    success_url = reverse_lazy('main:home')

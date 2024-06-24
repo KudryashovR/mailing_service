@@ -12,10 +12,7 @@
                class="btn btn-outline-light form-control">Редактировать</a>
         </td>
         <td>
-            <form action="#" method="post">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-outline-danger form-control">Удалить</button>
-            </form>
+            <a href="{% url 'main:mailing_delete' mailing.pk %}" class="btn btn-outline-danger form-control">Удалить</a>
         </td>
     </tr>
     {% endfor %}

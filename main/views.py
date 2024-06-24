@@ -1,12 +1,7 @@
-from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import Mailing
 from .forms import MailingForm
-
-
-def index(request):
-    return render(request, 'main/index.html')
 
 
 class MailingListView(ListView):

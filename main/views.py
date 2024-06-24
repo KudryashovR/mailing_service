@@ -25,15 +25,22 @@ class MailingDetailView(DetailView):
     template_name = 'main/mailing_detail.html'
     context_object_name = 'mailing'
 
-    def dysplay_clients(self, obj):
-        return ', '.join([client.get_full_name() for client in obj.clients.all()])
-
 
 class MailingCreateView(CreateView):
     model = Mailing
     template_name = 'main/mailing_form.html'
     form_class = MailingForm
-    success_url = reverse_lazy('mailing_list')
+    success_url = reverse_lazy('main:home')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        if self.request.resolver_match:
+            context['current_url_name'] = self.request.resolver_match.url_name
+        else:
+            context['current_url_name'] = None
+
+        return context
 
 
 class MailingUpdateView(UpdateView):

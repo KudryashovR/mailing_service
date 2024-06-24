@@ -1,0 +1,11 @@
+{% extends 'main/base.html' %}
+{% block content %}
+<div class="container text-center">
+    <h2>Вы уверены, что хотите удалить рассылку "{{ mailing }}"?</h2>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Да, удалить</button>
+        <a href="{% url 'main:home' %}" class="btn btn-secondary">Отмена</a>
+    </form>
+</div>
+{% endblock %}

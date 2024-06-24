@@ -5,8 +5,8 @@ from .models import Mailing
 from .forms import MailingForm
 
 
-# def index(request):
-#     return render(request, 'main/index.html')
+def index(request):
+    return render(request, 'main/index.html')
 
 
 class MailingListView(ListView):

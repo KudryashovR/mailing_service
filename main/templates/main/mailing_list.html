@@ -8,7 +8,8 @@
                 {{mailing.scheduled_time|date:"DATETIME_FORMAT" }}</a>
         </td>
         <td>
-            <a href="#" class="btn btn-outline-light form-control">Редактировать</a>
+            <a href="{% url 'main:mailing_edit' mailing.pk %}"
+               class="btn btn-outline-light form-control">Редактировать</a>
         </td>
         <td>
             <form action="#" method="post">

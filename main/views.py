@@ -47,7 +47,7 @@ class MailingUpdateView(UpdateView):
     model = Mailing
     template_name = 'main/mailing_form.html'
     form_class = MailingForm
-    success_url = reverse_lazy('mailing_list')
+    success_url = reverse_lazy('main:home')
 
     def get_success_url(self):
         return reverse_lazy('mailing_detail', kwargs={'pk': self.object.pk})

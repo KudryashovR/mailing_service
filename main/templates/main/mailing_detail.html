@@ -10,7 +10,9 @@
             <ul class="list-unstyled mt-3 mb-4">
                 <li><strong>Статус рассылки:</strong> {{ mailing.status }}</li>
                 <li><strong>Дата и время начала рассылки:</strong> {{ mailing.scheduled_time }}</li>
-                <li><strong>Клиенты:</strong> {% for client in mailing.clients.all %}{{ client.get_initials }} ({{ client.email }})</br>{% endfor %}
+                <li><strong>Периодичность рассылки:</strong> {{ mailing.periodicity }}</li>
+                <li><strong>Клиенты:</strong> {% for client in mailing.clients.all %}{{ client.get_initials }}
+                    ({{ client.email }})</br>{% endfor %}
                 </li>
             </ul>
             <a href="{% url 'main:mailing_edit' mailing.pk %}" class="btn btn-outline-primary">Редактировать</a>

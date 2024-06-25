@@ -1,15 +1,35 @@
 <ul class="nav nav-pills">
-    <li class="nav-item">
-        <a href="{% url 'main:home' %}" class="nav-link {% if current_url_name == 'home' %}active{% endif %}"
-           aria-current="page">Список рассылки</a>
+
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle {% if current_url_name == 'home' or current_url_name == 'mailing_create' %}active{% endif %}"
+           href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Рассылка</a>
+        <ul class="dropdown-menu">
+            <li>
+                <a href="{% url 'main:home' %}" class="nav-link {% if current_url_name == 'home' %}active{% endif %}"
+                   aria-current="page">Список рассылок</a>
+            </li>
+            <li>
+                <a href="{% url 'main:mailing_create' %}"
+                   class="nav-link {% if current_url_name == 'mailing_create' %}active{% endif %}" aria-current="page">Создать
+                    новую рассылку</a>
+            </li>
+        </ul>
+    </li>
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle {% if current_url_name == '№' or current_url_name == '№' %}active{% endif %}"
+           href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Клиенты</a>
+        <ul class="dropdown-menu">
+            <li class="nav-item">
+                <a href="#" class="nav-link {% if current_url_name == '#' %}active{% endif %}">Список клиентов</a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link {% if current_url_name == '#' %}active{% endif %}">Добавить клиента</a>
+            </li>
+        </ul>
     </li>
     <li class="nav-item">
-        <a href="{% url 'main:mailing_create' %}"
-           class="nav-link {% if current_url_name == 'mailing_create' %}active{% endif %}" aria-current="page">Создать
-            новую рассылку</a>
-    </li>
-    <li class="nav-item">
-        <a href="{% url 'main:attempts' %}" class="nav-link {% if current_url_name == 'attempts' %}active{% endif %}" aria-current="page">Результаты
+        <a href="{% url 'main:attempts' %}" class="nav-link {% if current_url_name == 'attempts' %}active{% endif %}"
+           aria-current="page">Результаты
             рассылок</a>
     </li>
     <li class="nav-item">

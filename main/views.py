@@ -90,3 +90,9 @@ class ClientListView(ListView):
             context['current_url_name'] = None
 
         return context
+
+
+class ClientDetailView(DetailView):
+    model = Client
+    template_name = 'main/client_detail.html'
+    context_object_name = 'client'

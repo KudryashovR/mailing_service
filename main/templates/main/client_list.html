@@ -6,7 +6,8 @@
         <td>{{ client.get_initials }}</td>
         <td>{{ client.email }}</td>
         <td>{{ client.comment }}</td>
-        <td><a href="#" class="btn btn-outline-light form-control">Подробнее</a></td>
+        <td><a href="{% url 'main:client_detail' client.pk %}" class="btn btn-outline-light form-control">Подробнее</a>
+        </td>
         <td><a href="#" class="btn btn-outline-warning form-control">Редактировать</a></td>
         <td><a href="#" class="btn btn-outline-danger form-control">Удалить</a></td>
     </tr>

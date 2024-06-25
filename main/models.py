@@ -1,6 +1,5 @@
 from django.db import models
 
-
 NULLABLE = {
     'blank': True,
     'null': True
@@ -34,11 +33,18 @@ class Mailing(models.Model):
         ('Отправлен', 'Отправлен'),
         ('Отклонен', 'Отклонен'),
     ]
+    PERIODICITY_CHOICES = [
+        ('Ежедневно', 'Ежедневно'),
+        ('Еженедельно', 'Еженедельно'),
+        ('Ежемесячно', 'Ежемесячно'),
+    ]
 
     title = models.CharField(max_length=255, verbose_name='Заголовок рассылки')
     message = models.TextField(verbose_name='Содержание рассылки')
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, verbose_name='Статус рассылки', default='Новый')
     scheduled_time = models.DateTimeField(verbose_name='Дата и время отправки')
+    periodicity = models.CharField(max_length=15, choices=PERIODICITY_CHOICES, verbose_name='Периодичность расылки',
+                                   default='Ежедневно')
     clients = models.ManyToManyField(Client, verbose_name='Клиенты')
 
     def __str__(self):

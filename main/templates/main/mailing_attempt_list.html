@@ -1,0 +1,17 @@
+{% extends 'main/base.html' %}
+{% block content %}
+<table class="table table-hover">
+    <tr>
+        <th class="text-center">Рассылка</th>
+        <th class="text-center">Дата и время попытки отправки</th>
+        <th class="text-center">Статус попытки отправки</th>
+    </tr>
+    {% for mailing in mailings_attempts %}
+    <tr>
+        <td class="text-center">{{ mailing.mailing }}</td>
+        <td class="text-center">{{ mailing.time }}</td>
+        <td class="text-center">{{ mailing.status }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

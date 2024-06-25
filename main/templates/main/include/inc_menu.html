@@ -16,11 +16,12 @@
         </ul>
     </li>
     <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle {% if current_url_name == '№' or current_url_name == '№' %}active{% endif %}"
+        <a class="nav-link dropdown-toggle {% if current_url_name == 'clients' or current_url_name == '№' %}active{% endif %}"
            href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Клиенты</a>
         <ul class="dropdown-menu">
             <li class="nav-item">
-                <a href="#" class="nav-link {% if current_url_name == '#' %}active{% endif %}">Список клиентов</a>
+                <a href="{% url 'main:clients' %}"
+                   class="nav-link {% if current_url_name == 'clients' %}active{% endif %}">Список клиентов</a>
             </li>
             <li class="nav-item">
                 <a href="#" class="nav-link {% if current_url_name == '#' %}active{% endif %}">Добавить клиента</a>

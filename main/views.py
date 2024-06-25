@@ -1,6 +1,6 @@
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .models import Mailing, MailingAttempt
+from .models import Mailing, MailingAttempt, Client
 from .forms import MailingForm
 
 
@@ -64,6 +64,22 @@ class MailingAttemptListView(ListView):
     template_name = 'main/mailing_attempt_list.html'
     context_object_name = 'mailings_attempts'
     queryset = MailingAttempt.objects.all().order_by('-time')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        if self.request.resolver_match:
+            context['current_url_name'] = self.request.resolver_match.url_name
+        else:
+            context['current_url_name'] = None
+
+        return context
+
+
+class ClientListView(ListView):
+    model = Client
+    template_name = 'main/client_list.html'
+    context_object_name = 'clients'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

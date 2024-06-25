@@ -1,0 +1,15 @@
+{% extends 'main/base.html' %}
+{% block content %}
+<table class="table table-hover">
+    {% for client in clients %}
+    <tr>
+        <td>{{ client.get_initials }}</td>
+        <td>{{ client.email }}</td>
+        <td>{{ client.comment }}</td>
+        <td><a href="#" class="btn btn-outline-light form-control">Подробнее</a></td>
+        <td><a href="#" class="btn btn-outline-warning form-control">Редактировать</a></td>
+        <td><a href="#" class="btn btn-outline-danger form-control">Удалить</a></td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

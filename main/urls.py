@@ -2,7 +2,7 @@ from django.urls import path
 
 from main.apps import MainConfig
 from main.views import MailingListView, MailingDetailView, MailingCreateView, MailingUpdateView, MailingDeleteView, \
-    MailingAttemptListView, ClientListView, ClientDetailView
+    MailingAttemptListView, ClientListView, ClientDetailView, ClientCreateView
 
 app_name = MainConfig.name
 
@@ -16,4 +16,5 @@ urlpatterns = [
     path('attempts/', MailingAttemptListView.as_view(), name='attempts'),
     path('clients/', ClientListView.as_view(), name='clients'),
     path('clients/<int:pk>/', ClientDetailView.as_view(), name='client_detail'),
+    path('clients/new/', ClientCreateView.as_view(), name='client_create')
 ]

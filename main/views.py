@@ -1,7 +1,7 @@
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import Mailing, MailingAttempt, Client
-from .forms import MailingForm
+from .forms import MailingForm, ClientForm
 
 
 class MailingListView(ListView):
@@ -47,7 +47,6 @@ class MailingUpdateView(UpdateView):
     model = Mailing
     template_name = 'main/mailing_form.html'
     form_class = MailingForm
-    # success_url = reverse_lazy('main:home')
 
     def get_success_url(self):
         return reverse_lazy('main:mailing_detail', kwargs={'pk': self.object.pk})
@@ -96,3 +95,20 @@ class ClientDetailView(DetailView):
     model = Client
     template_name = 'main/client_detail.html'
     context_object_name = 'client'
+
+
+class ClientCreateView(CreateView):
+    model = Client
+    template_name = 'main/client_form.html'
+    form_class = ClientForm
+    success_url = reverse_lazy('main:clients')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        if self.request.resolver_match:
+            context['current_url_name'] = self.request.resolver_match.url_name
+        else:
+            context['current_url_name'] = None
+
+        return context

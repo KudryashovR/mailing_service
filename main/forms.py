@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from django import forms
-from .models import Mailing
+from .models import Mailing, Client
 
 
 class MailingForm(forms.ModelForm):
@@ -18,3 +18,9 @@ class MailingForm(forms.ModelForm):
             'periodicity',
             'clients'
         ]
+
+
+class ClientForm(forms.ModelForm):
+    class Meta:
+        model = Client
+        fields = ['email', 'last_name', 'first_name', 'second_name', 'comment']

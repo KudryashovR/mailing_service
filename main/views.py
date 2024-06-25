@@ -112,3 +112,12 @@ class ClientCreateView(CreateView):
             context['current_url_name'] = None
 
         return context
+
+
+class ClientUpdateView(UpdateView):
+    model = Client
+    template_name = 'main/client_form.html'
+    form_class = ClientForm
+
+    def get_success_url(self):
+        return reverse_lazy('main:client_detail', kwargs={'pk': self.object.pk})

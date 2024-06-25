@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django import forms
 from .models import Mailing
 
@@ -13,5 +15,6 @@ class MailingForm(forms.ModelForm):
             'message',
             'status',
             'scheduled_time',
+            'periodicity',
             'clients'
         ]

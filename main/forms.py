@@ -5,6 +5,14 @@ from .models import Mailing, Client
 
 
 class MailingForm(forms.ModelForm):
+    """
+    Форма для создания и обновления экземпляров модели Mailing.
+
+    Атрибуты:
+        scheduled_time (forms.DateTimeField): Поле для указания даты и времени отправки, отображается как ввод типа
+                                              datetime-local.
+    """
+
     scheduled_time = forms.DateTimeField(label='Дата и время отправки',
                                          widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}))
 

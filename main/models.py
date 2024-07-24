@@ -14,9 +14,13 @@ class Client(models.Model):
     first_name = models.CharField(max_length=50, verbose_name='Имя')
     second_name = models.CharField(max_length=50, verbose_name='Отчество', **NULLABLE)
     comment = models.TextField(verbose_name='Комментарий', **NULLABLE)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='clients')
 
     def __str__(self):
         return self.get_full_name()
+
+    def get_client_owner(self):
+        return self.owner
 
     class Meta:
         verbose_name = 'Клиент'
@@ -66,6 +70,9 @@ class MailingAttempt(models.Model):
 
     def __str__(self):
         return f'Попытка отправки рассылки {self.mailing.title} на {self.time}'
+
+    def get_mailing_owner(self):
+        return self.mailing.owner
 
     class Meta:
         verbose_name = 'Попытка отправки рассылки'

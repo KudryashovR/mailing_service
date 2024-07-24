@@ -1,13 +1,10 @@
-from datetime import datetime
-
 from django import forms
+from django.contrib.admin.widgets import AdminDateWidget, AdminTimeWidget
+
 from .models import Mailing, Client
 
 
 class MailingForm(forms.ModelForm):
-    scheduled_time = forms.DateTimeField(label='Дата и время отправки',
-                                         widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}))
-
     class Meta:
         model = Mailing
         fields = [

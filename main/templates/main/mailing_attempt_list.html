@@ -8,12 +8,14 @@
         <th class="text-center">Сообщение при отправке</th>
     </tr>
     {% for mailing in mailings_attempts %}
+    {% if mailing.get_mailing_owner == user %}
     <tr>
         <td class="text-center">{{ mailing.mailing }}</td>
         <td class="text-center">{{ mailing.time }}</td>
         <td class="text-center">{{ mailing.status }}</td>
         <td class="text-center">{{ mailing.log_message }}</td>
     </tr>
+    {% endif %}
     {% endfor %}
 </table>
 {% endblock %}

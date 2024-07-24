@@ -1,5 +1,8 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+
+from .mixins import OwnerRequiredMixin
 from .models import Mailing, MailingAttempt, Client
 from .forms import MailingForm, ClientForm
 
@@ -20,13 +23,13 @@ class MailingListView(ListView):
         return context
 
 
-class MailingDetailView(DetailView):
+class MailingDetailView(LoginRequiredMixin, OwnerRequiredMixin, DetailView):
     model = Mailing
     template_name = 'main/mailing_detail.html'
     context_object_name = 'mailing'
 
 
-class MailingCreateView(CreateView):
+class MailingCreateView(LoginRequiredMixin, CreateView):
     model = Mailing
     template_name = 'main/mailing_form.html'
     form_class = MailingForm
@@ -48,7 +51,7 @@ class MailingCreateView(CreateView):
         return super().form_valid(form)
 
 
-class MailingUpdateView(UpdateView):
+class MailingUpdateView(LoginRequiredMixin, OwnerRequiredMixin, UpdateView):
     model = Mailing
     template_name = 'main/mailing_form.html'
     form_class = MailingForm
@@ -57,13 +60,13 @@ class MailingUpdateView(UpdateView):
         return reverse_lazy('main:mailing_detail', kwargs={'pk': self.object.pk})
 
 
-class MailingDeleteView(DeleteView):
+class MailingDeleteView(LoginRequiredMixin, OwnerRequiredMixin, DeleteView):
     model = Mailing
     template_name = 'main/mailing_confirm_delete.html'
     success_url = reverse_lazy('main:home')
 
 
-class MailingAttemptListView(ListView):
+class MailingAttemptListView(LoginRequiredMixin, ListView):
     model = MailingAttempt
     template_name = 'main/mailing_attempt_list.html'
     context_object_name = 'mailings_attempts'
@@ -80,7 +83,7 @@ class MailingAttemptListView(ListView):
         return context
 
 
-class ClientListView(ListView):
+class ClientListView(LoginRequiredMixin, ListView):
     model = Client
     template_name = 'main/client_list.html'
     context_object_name = 'clients'
@@ -96,13 +99,13 @@ class ClientListView(ListView):
         return context
 
 
-class ClientDetailView(DetailView):
+class ClientDetailView(LoginRequiredMixin, OwnerRequiredMixin, DetailView):
     model = Client
     template_name = 'main/client_detail.html'
     context_object_name = 'client'
 
 
-class ClientCreateView(CreateView):
+class ClientCreateView(LoginRequiredMixin, CreateView):
     model = Client
     template_name = 'main/client_form.html'
     form_class = ClientForm
@@ -118,8 +121,13 @@ class ClientCreateView(CreateView):
 
         return context
 
+    def form_valid(self, form):
+        form.instance.owner = self.request.user
 
-class ClientUpdateView(UpdateView):
+        return super().form_valid(form)
+
+
+class ClientUpdateView(LoginRequiredMixin, OwnerRequiredMixin, UpdateView):
     model = Client
     template_name = 'main/client_form.html'
     form_class = ClientForm
@@ -128,7 +136,7 @@ class ClientUpdateView(UpdateView):
         return reverse_lazy('main:client_detail', kwargs={'pk': self.object.pk})
 
 
-class ClientDeleteView(DeleteView):
+class ClientDeleteView(LoginRequiredMixin, OwnerRequiredMixin, DeleteView):
     model = Client
     template_name = 'main/client_confirm_delete.html'
     success_url = reverse_lazy('main:clients')

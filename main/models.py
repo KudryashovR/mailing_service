@@ -1,5 +1,7 @@
 from django.db import models
 
+from users.models import User
+
 NULLABLE = {
     'blank': True,
     'null': True
@@ -27,6 +29,7 @@ class Client(models.Model):
     first_name = models.CharField(max_length=50, verbose_name='Имя')
     second_name = models.CharField(max_length=50, verbose_name='Отчество', **NULLABLE)
     comment = models.TextField(verbose_name='Комментарий', **NULLABLE)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='clients')
 
     def __str__(self):
         """
@@ -37,6 +40,9 @@ class Client(models.Model):
         """
 
         return self.get_full_name()
+
+    def get_client_owner(self):
+        return self.owner
 
     class Meta:
         verbose_name = 'Клиент'
@@ -100,6 +106,7 @@ class Mailing(models.Model):
     periodicity = models.CharField(max_length=15, choices=PERIODICITY_CHOICES, verbose_name='Периодичность расылки',
                                    default='Ежедневно')
     clients = models.ManyToManyField(Client, verbose_name='Клиенты')
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='mailing')
 
     def __str__(self):
         """
@@ -135,6 +142,9 @@ class MailingAttempt(models.Model):
 
     def __str__(self):
         return f'Попытка отправки рассылки {self.mailing.title} на {self.time}'
+
+    def get_mailing_owner(self):
+        return self.mailing.owner
 
     class Meta:
         verbose_name = 'Попытка отправки рассылки'

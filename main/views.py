@@ -1,5 +1,8 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+
+from .mixins import OwnerRequiredMixin
 from .models import Mailing, MailingAttempt, Client
 from .forms import MailingForm, ClientForm
 
@@ -32,7 +35,7 @@ class MailingListView(ListView):
         return context
 
 
-class MailingDetailView(DetailView):
+class MailingDetailView(LoginRequiredMixin, OwnerRequiredMixin, DetailView):
     """
     Представление для отображения деталей конкретной рассылки.
 
@@ -47,7 +50,7 @@ class MailingDetailView(DetailView):
     context_object_name = 'mailing'
 
 
-class MailingCreateView(CreateView):
+class MailingCreateView(LoginRequiredMixin, CreateView):
     """
     Представление для создания новой рассылки.
 
@@ -60,7 +63,6 @@ class MailingCreateView(CreateView):
     Методы:
         get_context_data(self, **kwargs) -> dict: Дополняет контекст текущим URL именем.
         """
-
     model = Mailing
     template_name = 'main/mailing_form.html'
     form_class = MailingForm
@@ -76,8 +78,13 @@ class MailingCreateView(CreateView):
 
         return context
 
+    def form_valid(self, form):
+        form.instance.owner = self.request.user
 
-class MailingUpdateView(UpdateView):
+        return super().form_valid(form)
+
+
+class MailingUpdateView(LoginRequiredMixin, OwnerRequiredMixin, UpdateView):
     """
     Представление для обновления существующей рассылки.
 
@@ -89,7 +96,6 @@ class MailingUpdateView(UpdateView):
     Методы:
         get_success_url(self) -> str: Возвращает URL для перенаправления после успешного обновления.
         """
-
     model = Mailing
     template_name = 'main/mailing_form.html'
     form_class = MailingForm
@@ -98,7 +104,7 @@ class MailingUpdateView(UpdateView):
         return reverse_lazy('main:mailing_detail', kwargs={'pk': self.object.pk})
 
 
-class MailingDeleteView(DeleteView):
+class MailingDeleteView(LoginRequiredMixin, OwnerRequiredMixin, DeleteView):
     """
     Представление для удаления существующей рассылки.
 
@@ -107,13 +113,12 @@ class MailingDeleteView(DeleteView):
         template_name (str): Имя используемого шаблона.
         success_url (str): URL для перенаправления после успешного удаления.
     """
-
     model = Mailing
     template_name = 'main/mailing_confirm_delete.html'
     success_url = reverse_lazy('main:home')
 
 
-class MailingAttemptListView(ListView):
+class MailingAttemptListView(LoginRequiredMixin, ListView):
     """
     Представление для отображения списка попыток рассылки.
 
@@ -126,7 +131,6 @@ class MailingAttemptListView(ListView):
     Методы:
         get_context_data(self, **kwargs) -> dict: Дополняет контекст текущим URL именем.
     """
-
     model = MailingAttempt
     template_name = 'main/mailing_attempt_list.html'
     context_object_name = 'mailings_attempts'
@@ -143,7 +147,7 @@ class MailingAttemptListView(ListView):
         return context
 
 
-class ClientListView(ListView):
+class ClientListView(LoginRequiredMixin, ListView):
     """
     Представление для отображения списка клиентов.
 
@@ -155,7 +159,6 @@ class ClientListView(ListView):
     Методы:
         get_context_data(self, **kwargs) -> dict: Дополняет контекст текущим URL именем.
     """
-
     model = Client
     template_name = 'main/client_list.html'
     context_object_name = 'clients'
@@ -171,7 +174,7 @@ class ClientListView(ListView):
         return context
 
 
-class ClientDetailView(DetailView):
+class ClientDetailView(LoginRequiredMixin, OwnerRequiredMixin, DetailView):
     """
     Представление для отображения деталей конкретного клиента.
 
@@ -186,7 +189,7 @@ class ClientDetailView(DetailView):
     context_object_name = 'client'
 
 
-class ClientCreateView(CreateView):
+class ClientCreateView(LoginRequiredMixin, CreateView):
     """
     Представление для создания нового клиента.
 
@@ -215,8 +218,13 @@ class ClientCreateView(CreateView):
 
         return context
 
+    def form_valid(self, form):
+        form.instance.owner = self.request.user
 
-class ClientUpdateView(UpdateView):
+        return super().form_valid(form)
+
+
+class ClientUpdateView(LoginRequiredMixin, OwnerRequiredMixin, UpdateView):
     """
     Представление для обновления существующего клиента.
 
@@ -237,7 +245,7 @@ class ClientUpdateView(UpdateView):
         return reverse_lazy('main:client_detail', kwargs={'pk': self.object.pk})
 
 
-class ClientDeleteView(DeleteView):
+class ClientDeleteView(LoginRequiredMixin, OwnerRequiredMixin, DeleteView):
     """
     Представление для удаления существующего клиента.
 

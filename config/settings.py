@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_bootstrap4',
     'main',
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -162,3 +163,13 @@ EMAIL_ADMIN = EMAIL_HOST_USER
 CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap4'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+SITE_URL = env('SITE_URL')
+
+AUTH_USER_MODEL = 'users.User'
+
+LOGIN_URL = 'user:login'
+
+LOGIN_REDIRECT_URL = '/'
+
+LOGOUT_REDIRECT_URL = 'main:home'

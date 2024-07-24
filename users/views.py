@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth import login
+from django.contrib.auth.views import LoginView
 from django.shortcuts import redirect, render, get_object_or_404
 
 from users.forms import CustomUserCreationForm
@@ -18,7 +19,7 @@ def register(request):
     else:
         form = CustomUserCreationForm()
 
-    return render(request, 'users/registration.html', {'form': form})
+    return render(request, 'users/registration.html', {'form': form, 'current_url_name': 'register'})
 
 
 def verify_email(request, token):
@@ -32,3 +33,22 @@ def verify_email(request, token):
         messages.info(request, 'Your email was already verified.')
 
     return redirect('main:home')
+
+
+class CustomLoginView(LoginView):
+    template_name = 'users/login.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['current_url_name'] = 'login'
+
+        return context
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+
+        user = form.get_user()
+        messages.success(self.request, f'Welcome, {user.get_full_name()}!')
+
+        return response

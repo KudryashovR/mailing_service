@@ -119,6 +119,9 @@ class User(AbstractUser):
     def __str__(self):
         return self.email
 
+    def get_full_name(self):
+        return f'{self.first_name} {self.last_name}'
+
     def send_verification_email(self):
         verification_url = f'{settings.SITE_URL}/user/verify-email/{self.email_verification_token}/'
         subject = 'Verify your email address'

@@ -8,7 +8,10 @@ from django.contrib.auth.models import AbstractUser
 from django.core.mail import send_mail
 from django.db import models
 
-from main.models import NULLABLE
+NULLABLE = {
+    'blank': True,
+    'null': True
+}
 
 
 class UserManager(BaseUserManager):

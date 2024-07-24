@@ -12,8 +12,8 @@
                 <li><strong>Дата и время начала рассылки:</strong> {{ mailing.scheduled_time }}</li>
                 <li><strong>Периодичность рассылки:</strong> {{ mailing.periodicity }}</li>
                 <li><strong>Клиенты:</strong> {% for client in mailing.clients.all %}{{ client.get_initials }}
-                    ({{ client.email }})</br>{% endfor %}
-                </li>
+                    ({{ client.email }})</br>{% endfor %}</li>
+                <li><strong>Влыделец:</strong> {{ mailing.owner }}</li>
             </ul>
             <a href="{% url 'main:mailing_edit' mailing.pk %}" class="btn btn-outline-primary">Редактировать</a>
             <a href="{% url 'main:mailing_delete' mailing.pk %}" class="btn btn-outline-danger">Удалить</a>

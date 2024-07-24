@@ -1,5 +1,7 @@
 from django.db import models
 
+from users.models import User
+
 NULLABLE = {
     'blank': True,
     'null': True
@@ -46,6 +48,7 @@ class Mailing(models.Model):
     periodicity = models.CharField(max_length=15, choices=PERIODICITY_CHOICES, verbose_name='Периодичность расылки',
                                    default='Ежедневно')
     clients = models.ManyToManyField(Client, verbose_name='Клиенты')
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='mailing')
 
     def __str__(self):
         return self.title

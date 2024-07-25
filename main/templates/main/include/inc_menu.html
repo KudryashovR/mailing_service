@@ -40,7 +40,8 @@
     </li>
     {% if user.is_authenticated %}
     <li class="nav-item">
-        <a href="#" class="nav-link">Профиль</a>
+        <a href="{% url 'user:edit_profile' %}"
+           class="nav-link {% if current_url_name == 'profile' %}active{% endif %}">Профиль</a>
     </li>
     <li class="nav-item">
         <form method="post" action="{% url 'user:logout' %}">

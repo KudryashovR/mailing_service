@@ -28,7 +28,8 @@ def register(request):
     else:
         form = CustomUserCreationForm()
 
-    return render(request, 'users/registration.html', {'form': form, 'current_url_name': 'register'})
+    return render(request, 'users/registration.html', {'form': form,
+                                                       'current_url_name': 'register'})
 
 
 def verify_email(request, token):
@@ -37,9 +38,9 @@ def verify_email(request, token):
     if not user.is_email_verified:
         user.is_email_verified = True
         user.save()
-        messages.success(request, 'Your email has been verified.')
+        messages.success(request, 'Почта подтверждена.')
     else:
-        messages.info(request, 'Your email was already verified.')
+        messages.info(request, 'Почта не требует подтверждения.')
 
     return redirect('main:home')
 
@@ -92,4 +93,5 @@ class PasswordResetView(View):
 
     @staticmethod
     def send_new_password_email(user, new_password):
-        send_mail("Your new password", f"Your new password is: {new_password}", EMAIL_HOST_USER, [user.email])
+        send_mail("Your new password", f"Your new password is: {new_password}", EMAIL_HOST_USER,
+                  [user.email])

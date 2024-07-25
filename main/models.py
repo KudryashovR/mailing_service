@@ -68,6 +68,10 @@ class Client(models.Model):
 
         return f'{self.last_name} {self.first_name[0]}. {self.second_name[0]}.'
 
+    @staticmethod
+    def get_unique_clients():
+        return Client.objects.count()
+
 
 class Mailing(models.Model):
     """
@@ -122,6 +126,14 @@ class Mailing(models.Model):
         verbose_name = 'Рассылка'
         verbose_name_plural = 'Рассылки'
 
+    @staticmethod
+    def get_total_mailings():
+        return Mailing.objects.count()
+
+    @staticmethod
+    def get_active_mailings():
+        return Mailing.objects.filter(status='Новый').count() + Mailing.objects.filter(status='Отправлен').count()
+
 
 class MailingAttempt(models.Model):
     """
@@ -149,3 +161,22 @@ class MailingAttempt(models.Model):
     class Meta:
         verbose_name = 'Попытка отправки рассылки'
         verbose_name_plural = 'Попытки отправки рассылок'
+
+
+class BlogPost(models.Model):
+    title = models.CharField(max_length=200, verbose_name='Наименование статьи')
+    content = models.TextField(verbose_name='Содержание статьи')
+    image = models.ImageField(upload_to='blog_images', **NULLABLE, verbose_name='Изображение')
+    view_count = models.PositiveIntegerField(default=0, verbose_name='Количество просмотров')
+    published_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = 'Статья блога'
+        verbose_name_plural = 'Статьи блога'
+
+    @staticmethod
+    def get_ramdom_articles(count):
+        return BlogPost.objects.order_by('?')[:count]

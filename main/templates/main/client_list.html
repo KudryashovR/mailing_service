@@ -1,7 +1,7 @@
 {% extends 'main/base.html' %}
 {% block content %}
 <table class="table table-hover">
-    {% for client in clients %}
+    {% for client in object_list %}
     {% if client.get_client_owner == user %}
     <tr>
         <td>{{ client.get_initials }}</td>

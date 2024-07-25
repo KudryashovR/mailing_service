@@ -1,11 +1,15 @@
 <ul class="nav nav-pills">
+    <li>
+        <a href="{% url 'main:home' %}" class="nav-link {% if current_url_name == 'home' %}active{% endif %}"
+           aria-current="page">Главная</a>
+    </li>
     {% if user.is_authenticated %}
     <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle {% if current_url_name == 'home' or current_url_name == 'mailing_create' %}active{% endif %}"
+        <a class="nav-link dropdown-toggle {% if current_url_name == 'mailings' or current_url_name == 'mailing_create' %}active{% endif %}"
            href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Рассылка</a>
         <ul class="dropdown-menu">
             <li>
-                <a href="{% url 'main:home' %}" class="nav-link {% if current_url_name == 'home' %}active{% endif %}"
+                <a href="{% url 'main:mailings' %}" class="nav-link {% if current_url_name == 'mailings' %}active{% endif %}"
                    aria-current="page">Список рассылок</a>
             </li>
             <li>
@@ -36,7 +40,7 @@
     </li>
     {% endif %}
     <li class="nav-item">
-        <a href="#" class="nav-link {% if current_url_name == '#' %}active{% endif %}">О сервисе</a>
+        <a href="{% url 'main:blog' %}" class="nav-link {% if current_url_name == 'blog' %}active{% endif %}">Блог</a>
     </li>
     {% if user.is_authenticated %}
     <li class="nav-item">

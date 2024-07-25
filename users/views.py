@@ -1,9 +1,18 @@
 from django.contrib import messages
 from django.contrib.auth import login
+from django.contrib.auth.hashers import make_password
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
+from django.core.mail import send_mail
+from django.http import HttpResponse
 from django.shortcuts import redirect, render, get_object_or_404
+from django.urls import reverse_lazy
+from django.utils.crypto import get_random_string
+from django.views import View
+from django.views.generic import UpdateView
 
-from users.forms import CustomUserCreationForm
+from config.settings import EMAIL_HOST_USER
+from users.forms import CustomUserCreationForm, ProfileForm
 from users.models import User
 
 
@@ -52,3 +61,35 @@ class CustomLoginView(LoginView):
         messages.success(self.request, f'Добро пожаловать, {user.get_full_name()}!')
 
         return response
+
+
+class ProfileUpdateView(LoginRequiredMixin, UpdateView):
+    model = User
+    form_class = ProfileForm
+    template_name = 'users/edit_profile.html'
+    success_url = reverse_lazy('main:home')
+
+    def get_object(self):
+        return User.objects.get(email=self.request.user)
+
+
+class PasswordResetView(View):
+    def get(self, request):
+        return render(request, 'users/password_reset.html')
+
+    def post(self, request):
+        email = request.POST['email']
+        user = User.objects.filter(email=email).first()
+
+        if user:
+            new_password = get_random_string(12)
+            user.password = make_password(new_password)
+            user.save()
+            self.send_new_password_email(user, new_password)
+
+        return HttpResponse(
+            'Новый пароль отправлен на вашу почту. <a href="{0}">Назад</a>'.format(reverse_lazy('user:login')))
+
+    @staticmethod
+    def send_new_password_email(user, new_password):
+        send_mail("Your new password", f"Your new password is: {new_password}", EMAIL_HOST_USER, [user.email])

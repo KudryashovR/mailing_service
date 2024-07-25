@@ -1,9 +1,9 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
-from .mixins import OwnerRequiredMixin
+from .mixins import OwnerRequiredMixin, EmailVerificationRequiredMixin
 from .models import Mailing, MailingAttempt, Client, BlogPost
 from .forms import MailingForm, ClientForm
 
@@ -25,7 +25,7 @@ def index(request, *args, **kwargs):
     return render(request,'main/index.html', context)
 
 
-class MailingListView(ListView):
+class MailingListView(EmailVerificationRequiredMixin, ListView):
     """
     Представление для отображения списка рассылок.
 
@@ -68,7 +68,7 @@ class MailingDetailView(LoginRequiredMixin, OwnerRequiredMixin, DetailView):
     context_object_name = 'mailing'
 
 
-class MailingCreateView(LoginRequiredMixin, CreateView):
+class MailingCreateView(LoginRequiredMixin, EmailVerificationRequiredMixin, CreateView):
     """
     Представление для создания новой рассылки.
 
@@ -136,7 +136,7 @@ class MailingDeleteView(LoginRequiredMixin, OwnerRequiredMixin, DeleteView):
     success_url = reverse_lazy('main:home')
 
 
-class MailingAttemptListView(LoginRequiredMixin, ListView):
+class MailingAttemptListView(LoginRequiredMixin, EmailVerificationRequiredMixin, ListView):
     """
     Представление для отображения списка попыток рассылки.
 
@@ -165,7 +165,7 @@ class MailingAttemptListView(LoginRequiredMixin, ListView):
         return context
 
 
-class ClientListView(LoginRequiredMixin, ListView):
+class ClientListView(LoginRequiredMixin, EmailVerificationRequiredMixin, ListView):
     """
     Представление для отображения списка клиентов.
 
@@ -206,7 +206,7 @@ class ClientDetailView(LoginRequiredMixin, OwnerRequiredMixin, DetailView):
     context_object_name = 'client'
 
 
-class ClientCreateView(LoginRequiredMixin, CreateView):
+class ClientCreateView(LoginRequiredMixin, EmailVerificationRequiredMixin, CreateView):
     """
     Представление для создания нового клиента.
 
@@ -293,7 +293,7 @@ class BlogListView(ListView):
         return context
 
 
-class BlogDetailView(DetailView):
+class BlogDetailView(LoginRequiredMixin, DetailView):
     model = BlogPost
 
     def get_object(self, *args, **kwargs):
@@ -305,20 +305,28 @@ class BlogDetailView(DetailView):
         return article
 
 
-class BlogCreateView(CreateView):
+class BlogCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = BlogPost
     fields = ('title', 'content', 'image')
     success_url = reverse_lazy('main:blog')
+    permission_required = 'main.add_blogpost'
+
+    def form_valid(self, form):
+        form.instance.owner = self.request.user
+
+        return super().form_valid(form)
 
 
-class BlogUpdateView(UpdateView):
+class BlogUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = BlogPost
     fields = ('title', 'content', 'image')
+    permission_required = 'main.change_blogpost'
 
     def get_success_url(self):
         return reverse_lazy('main:blog_detail', kwargs={'pk': self.object.pk})
 
 
-class BlogDeleteView(DeleteView):
+class BlogDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = BlogPost
     success_url = reverse_lazy('main:blog')
+    permission_required = 'main.delete_blogpost'

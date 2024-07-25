@@ -1,11 +1,13 @@
 {% extends 'main/base.html' %}
 {% block content %}
 {% load custom_filters %}
+{% if user.is_staff %}
 <div class="row text-end">
     <div class="col">
         <a type="button" class="btn btn-primary mb-2" href="{% url 'main:blog_create' %}">Добавить статью</a>
     </div>
 </div>
+{% endif %}
 <div class="row">
     {% for article in object_list %}
     <div class="col-3 text-center">
@@ -24,10 +26,12 @@
                 <p>Количество просмотров: {{ article.view_count }}</p>
                 <a class="p-2 btn btn-outline-primary"
                    href="{% url 'main:blog_detail' article.pk %}">Подробнее</a>
+                {% if user.is_staff %}
                 <a class="p-2 btn btn-outline-warning"
                    href="{% url 'main:blog_edit' article.pk %}">Редактировать</a>
                 <a class="p-2 btn btn-outline-danger"
                    href="{% url 'main:blog_delete' article.pk %}">Удалить</a>
+                {% endif %}
             </div>
         </div>
     </div>

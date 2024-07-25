@@ -3,7 +3,7 @@
         <a href="{% url 'main:home' %}" class="nav-link {% if current_url_name == 'home' %}active{% endif %}"
            aria-current="page">Главная</a>
     </li>
-    {% if user.is_authenticated %}
+    {% if user.is_authenticated and user.is_email_verified %}
     <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle {% if current_url_name == 'mailings' or current_url_name == 'mailing_create' %}active{% endif %}"
            href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Рассылка</a>
@@ -47,6 +47,11 @@
         <a href="{% url 'user:edit_profile' %}"
            class="nav-link {% if current_url_name == 'profile' %}active{% endif %}">Профиль</a>
     </li>
+    {% if user.is_superuser %}
+    <li class="nav-item">
+        <a href="{% url 'admin:index' %}" class="nav-link">Админка</a>
+    </li>
+    {% endif %}
     <li class="nav-item">
         <form method="post" action="{% url 'user:logout' %}">
             {% csrf_token %}

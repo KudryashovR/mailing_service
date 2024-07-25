@@ -17,10 +17,12 @@
                     <li>- {{ object.content }}</li>
                 </ul>
                 <p>Количество просмотров: {{ object.view_count }}</p>
+                {% if user.is_staff %}
                 <a class="p-2 btn btn-outline-warning"
                    href="{% url 'main:blog_edit' object.pk %}">Редактировать</a>
                 <a class="p-2 btn btn-outline-danger"
                    href="{% url 'main:blog_delete' object.pk %}">Удалить</a>
+                {% endif %}
                 <a class="p-2 btn btn-outline-light" href="{% url 'main:blog' %}">Назад</a>
             </div>
         </div>

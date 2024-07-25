@@ -109,6 +109,13 @@
         {% endfor %}
     </div>
     {% endif %}
+    {% if user.is_authenticated and not user.is_email_verified %}
+    <div class="messages">
+        <div class="alert info alert-info">
+            Пожалуйста подтвердите вашу почту.
+        </div>
+    </div>
+    {% endif %}
     {% block content %}
     {% endblock %}
 </main>

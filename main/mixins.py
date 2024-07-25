@@ -24,5 +24,22 @@ class OwnerRequiredMixin:
                 messages.info(request, 'Доступ запрещен!')
 
                 return redirect('main:home')
+        elif not request.user.is_email_verified:
+                messages.info(request, 'Пожалуйста, подтвердите вашу почту!')
+
+                return redirect('main:home')
+
+        return super().dispatch(request, *args, **kwargs)
+
+
+class EmailVerificationRequiredMixin:
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect('user:login')
+
+        if not request.user.is_email_verified:
+            messages.info(request, "Пожалуйста, подтвердите ваш email, чтобы получить доступ к этой странице.")
+
+            return redirect('main:home')
 
         return super().dispatch(request, *args, **kwargs)

@@ -1,10 +1,28 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
 from .mixins import OwnerRequiredMixin
-from .models import Mailing, MailingAttempt, Client
+from .models import Mailing, MailingAttempt, Client, BlogPost
 from .forms import MailingForm, ClientForm
+
+
+def index(request, *args, **kwargs):
+    total_mailings = Mailing.get_total_mailings()
+    active_mailings = Mailing.get_active_mailings()
+    unique_clients = Client.get_unique_clients()
+    random_articles = BlogPost.get_ramdom_articles(3)
+
+    context = {
+        'total_mailings': total_mailings,
+        'active_mailings': active_mailings,
+        'unique_clients': unique_clients,
+        'random_articles': random_articles,
+        'current_url_name': 'home'
+    }
+
+    return render(request,'main/index.html', context)
 
 
 class MailingListView(ListView):
@@ -161,7 +179,6 @@ class ClientListView(LoginRequiredMixin, ListView):
     """
     model = Client
     template_name = 'main/client_list.html'
-    context_object_name = 'clients'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -258,3 +275,50 @@ class ClientDeleteView(LoginRequiredMixin, OwnerRequiredMixin, DeleteView):
     model = Client
     template_name = 'main/client_confirm_delete.html'
     success_url = reverse_lazy('main:clients')
+
+
+class BlogListView(ListView):
+    model = BlogPost
+    paginate_by = 8
+    ordering = '-published_date'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        if self.request.resolver_match:
+            context['current_url_name'] = self.request.resolver_match.url_name
+        else:
+            context['current_url_name'] = None
+
+        return context
+
+
+class BlogDetailView(DetailView):
+    model = BlogPost
+
+    def get_object(self, *args, **kwargs):
+        article = super().get_object(*args, **kwargs)
+
+        article.view_count += 1
+        article.save()
+
+        return article
+
+
+class BlogCreateView(CreateView):
+    model = BlogPost
+    fields = ('title', 'content', 'image')
+    success_url = reverse_lazy('main:blog')
+
+
+class BlogUpdateView(UpdateView):
+    model = BlogPost
+    fields = ('title', 'content', 'image')
+
+    def get_success_url(self):
+        return reverse_lazy('main:blog_detail', kwargs={'pk': self.object.pk})
+
+
+class BlogDeleteView(DeleteView):
+    model = BlogPost
+    success_url = reverse_lazy('main:blog')

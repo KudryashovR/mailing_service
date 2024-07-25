@@ -1,0 +1,30 @@
+{% extends 'main/base.html' %}
+{% block content %}
+{% load custom_filters %}
+<div class="row">
+    <div class="col-3"></div>
+    <div class="col-6 text-center">
+        <div class="card mb-4 box-shadow">
+            <div class="card-header">
+                <h4 class="my-0 font-weight-normal">{{ object.title }}</h4>
+            </div>
+            <div class="card-body">
+                {% if object.image %}
+                <img src="{{ object.image|media_redirection }}" class="img-fluid" alt="{{ article.title }}">
+                {% endif %}
+                <p>{{ object.published_date }}</p>
+                <ul class="list-unstyled mt-3 mb-4 text-start m-3">
+                    <li>- {{ object.content }}</li>
+                </ul>
+                <p>Количество просмотров: {{ object.view_count }}</p>
+                <a class="p-2 btn btn-outline-warning"
+                   href="{% url 'main:blog_edit' object.pk %}">Редактировать</a>
+                <a class="p-2 btn btn-outline-danger"
+                   href="{% url 'main:blog_delete' object.pk %}">Удалить</a>
+                <a class="p-2 btn btn-outline-light" href="{% url 'main:blog' %}">Назад</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-3"></div>
+</div>
+{% endblock %}

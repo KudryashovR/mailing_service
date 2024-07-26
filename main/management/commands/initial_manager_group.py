@@ -7,13 +7,10 @@ class Command(BaseCommand):
         group, created = Group.objects.get_or_create(name='Менеджер')
 
         permissions = [
-            Permission.objects.get(codename='can_add_blogpost'),
-            Permission.objects.get(codename='can_change_blogpost'),
-            Permission.objects.get(codename='can_delete_blogpost'),
-            Permission.objects.get(codename='can_view_blogpost'),
-            Permission.objects.get(codename='can_view_mailing'),
-            Permission.objects.get(codename='can_change_user'),
-            Permission.objects.get(codename='can_view_user'),
+            Permission.objects.get(codename='view_blogpost'),
+            Permission.objects.get(codename='view_mailing'),
+            Permission.objects.get(codename='view_user'),
+            Permission.objects.get(codename='set_active'),
         ]
 
         for perm in permissions:

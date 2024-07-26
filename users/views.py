@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth import login
+from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.views import LoginView
@@ -116,3 +117,12 @@ class UserListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
 class UserDetailsView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
     model = User
     permission_required = 'users.view_user'
+
+
+@permission_required('users.set_active')
+def toggle_user_active(request, user_id):
+    user = get_object_or_404(User, pk=user_id)
+    user.is_active = not user.is_active
+    user.save()
+
+    return redirect('user:users')

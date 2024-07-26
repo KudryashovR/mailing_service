@@ -18,6 +18,18 @@
             <a href="#" class="btn btn-outline-danger form-control">Удалить</a>
         </td>
         {% endif %}
+        {% if perms.users.set_active %}
+        <td>
+            <a href="{% url 'user:user_toggle' usr.pk %}"
+               class="btn btn-outline-{% if usr.is_active %}danger{% else %}light{% endif %} form-control">
+                {% if usr.is_active %}
+                Заблокировать
+                {% else %}
+                Активировать
+                {% endif %}
+            </a>
+        </td>
+        {% endif %}
     </tr>
     {% endif %}
     {% endfor %}

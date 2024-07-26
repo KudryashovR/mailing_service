@@ -23,6 +23,16 @@
             {% if perms.users.delete_user %}
             <a href="#" class="btn btn-outline-danger">Удалить</a>
             {% endif %}
+            {% if perms.users.set_active %}
+            <a href="{% url 'user:user_toggle' object.pk %}"
+               class="btn btn-outline-{% if object.is_active %}danger{% else %}light{% endif %}">
+                {% if object.is_active %}
+                Заблокировать
+                {% else %}
+                Активировать
+                {% endif %}
+            </a>
+            {% endif %}
             <a href="{% url 'user:users' %}" class="btn btn-outline-secondary">Назад</a>
         </div>
     </div>

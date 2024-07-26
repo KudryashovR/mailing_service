@@ -119,6 +119,14 @@ class User(AbstractUser):
 
     objects = UserManager()
 
+    class Meta:
+        permissions = [
+            (
+                'set_active',
+                'Может блокировать пользователей сервиса.'
+            )
+        ]
+
     def __str__(self):
         return self.email
 

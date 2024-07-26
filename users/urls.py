@@ -4,7 +4,7 @@ from django.urls import path
 from main.urls import urlpatterns as main_url
 from main.apps import MainConfig
 from users.views import register, verify_email, CustomLoginView, ProfileUpdateView, PasswordResetView, UserListView, \
-    UserDetailsView
+    UserDetailsView, toggle_user_active
 
 app_name = MainConfig.name
 
@@ -17,4 +17,5 @@ urlpatterns = [
                   path('password_reset/', PasswordResetView.as_view(), name='password_reset'),
                   path('users/', UserListView.as_view(), name='users'),
                   path('users/<int:pk>/', UserDetailsView.as_view(), name='user_detail'),
+                  path('users/toggle/<int:user_id>/', toggle_user_active, name='user_toggle'),
               ] + main_url

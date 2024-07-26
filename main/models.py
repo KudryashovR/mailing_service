@@ -126,6 +126,13 @@ class Mailing(models.Model):
         verbose_name = 'Рассылка'
         verbose_name_plural = 'Рассылки'
 
+        permissions = [
+            (
+                'set_status_disregard',
+                'Отключение рассылки.'
+            )
+        ]
+
     @staticmethod
     def get_total_mailings():
         return Mailing.objects.count()
@@ -133,6 +140,10 @@ class Mailing(models.Model):
     @staticmethod
     def get_active_mailings():
         return Mailing.objects.filter(status='Новый').count() + Mailing.objects.filter(status='Отправлен').count()
+
+    def set_status_disregard(self):
+        self.status = 'Отклонен'
+        self.save()
 
 
 class MailingAttempt(models.Model):

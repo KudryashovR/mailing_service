@@ -11,6 +11,7 @@ class Command(BaseCommand):
             Permission.objects.get(codename='view_mailing'),
             Permission.objects.get(codename='view_user'),
             Permission.objects.get(codename='set_active'),
+            Permission.objects.get(codename='set_status_disregard'),
         ]
 
         for perm in permissions:

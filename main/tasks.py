@@ -40,6 +40,9 @@ def send_mailing():
         return
 
     for mailing in mailings:
+        if mailing.status == 'Отклонен':
+            continue
+
         clients = mailing.clients.all()
         successful = True
 

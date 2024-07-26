@@ -12,12 +12,21 @@
                 <li><strong>Дата и время начала рассылки:</strong> {{ mailing.scheduled_time }}</li>
                 <li><strong>Периодичность рассылки:</strong> {{ mailing.periodicity }}</li>
                 <li><strong>Клиенты:</strong> {% for client in mailing.clients.all %}{{ client.get_initials }}
-                    ({{ client.email }})</br>{% endfor %}</li>
+                    ({{ client.email }})</br>{% endfor %}
+                </li>
                 <li><strong>Влыделец:</strong> {{ mailing.owner }}</li>
             </ul>
-            {% if mailing.owner == user %}
+            {% if mailing.owner == user or perms.main.change_mailing %}
             <a href="{% url 'main:mailing_edit' mailing.pk %}" class="btn btn-outline-primary">Редактировать</a>
+            {% endif %}
+            {% if mailing.owner == user or perms.main.delete_mailing %}
             <a href="{% url 'main:mailing_delete' mailing.pk %}" class="btn btn-outline-danger">Удалить</a>
+            {% endif %}
+            {% if perms.main.set_status_disregard and mailing.status != 'Отклонен' %}
+            <td>
+                <a href="{% url 'main:disregard_mailing' mailing.pk %}" class="btn btn-outline-danger">
+                    Отключить</a>
+            </td>
             {% endif %}
             <a href="{% url 'main:mailings' %}" class="btn btn-outline-secondary">Назад</a>
         </div>

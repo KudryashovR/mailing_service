@@ -19,6 +19,12 @@
             <a href="{% url 'main:mailing_delete' mailing.pk %}" class="btn btn-outline-danger form-control">Удалить</a>
         </td>
         {% endif %}
+        {% if perms.main.set_status_disregard and mailing.status != 'Отклонен' %}
+        <td>
+            <a href="{% url 'main:disregard_mailing' mailing.pk %}" class="btn btn-outline-danger form-control">
+                Отключить</a>
+        </td>
+        {% endif %}
     </tr>
     {% endif %}
     {% endfor %}

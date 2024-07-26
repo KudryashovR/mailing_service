@@ -1,5 +1,6 @@
+from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
@@ -330,3 +331,11 @@ class BlogDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = BlogPost
     success_url = reverse_lazy('main:blog')
     permission_required = 'main.delete_blogpost'
+
+
+@permission_required('main.set_status_disregard')
+def set_mailing_status_disregard(request, mailing_id):
+    mailing = get_object_or_404(Mailing, pk=mailing_id)
+    mailing.set_status_disregard()
+
+    return redirect('main:mailings')

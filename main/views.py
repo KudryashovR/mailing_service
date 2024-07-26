@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
-from .mixins import OwnerRequiredMixin, EmailVerificationRequiredMixin
+from .mixins import OwnerRequiredMixin, EmailVerificationRequiredMixin, StaffRequiredMixin
 from .models import Mailing, MailingAttempt, Client, BlogPost
 from .forms import MailingForm, ClientForm
 
@@ -53,7 +53,7 @@ class MailingListView(EmailVerificationRequiredMixin, ListView):
         return context
 
 
-class MailingDetailView(LoginRequiredMixin, OwnerRequiredMixin, DetailView):
+class MailingDetailView(LoginRequiredMixin, StaffRequiredMixin, DetailView):
     """
     Представление для отображения деталей конкретной рассылки.
 

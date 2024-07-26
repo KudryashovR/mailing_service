@@ -3,6 +3,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils.http import urlencode
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
 
 class OwnerRequiredMixin:
@@ -25,9 +26,9 @@ class OwnerRequiredMixin:
 
                 return redirect('main:home')
         elif not request.user.is_email_verified:
-                messages.info(request, 'Пожалуйста, подтвердите вашу почту!')
+            messages.info(request, 'Пожалуйста, подтвердите вашу почту!')
 
-                return redirect('main:home')
+            return redirect('main:home')
 
         return super().dispatch(request, *args, **kwargs)
 
@@ -39,6 +40,33 @@ class EmailVerificationRequiredMixin:
 
         if not request.user.is_email_verified:
             messages.info(request, "Пожалуйста, подтвердите ваш email, чтобы получить доступ к этой странице.")
+
+            return redirect('main:home')
+
+        return super().dispatch(request, *args, **kwargs)
+
+
+class StaffRequiredMixin:
+    owner_field = 'owner'
+
+    def dispatch(self, request, *args, **kwargs):
+        obj = self.get_object()
+        owner = getattr(obj, self.owner_field)
+        model_name = obj._meta.model_name
+
+        if isinstance(self, ListView) or isinstance(self, DetailView):
+            perm = 'view'
+        elif isinstance(self, CreateView):
+            perm = 'add'
+        elif isinstance(self, UpdateView):
+            perm = 'change'
+        elif isinstance(self, DeleteView):
+            perm = 'delete'
+        print(perm)
+
+        if (not request.user.is_staff and request.user != owner) or not request.user.has_perm(
+                f'main.{perm}_{model_name}'):
+            messages.info(request, "Доступ запрещен.")
 
             return redirect('main:home')
 

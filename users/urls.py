@@ -3,7 +3,8 @@ from django.urls import path
 
 from main.urls import urlpatterns as main_url
 from main.apps import MainConfig
-from users.views import register, verify_email, CustomLoginView, ProfileUpdateView, PasswordResetView
+from users.views import register, verify_email, CustomLoginView, ProfileUpdateView, PasswordResetView, UserListView, \
+    UserDetailsView
 
 app_name = MainConfig.name
 
@@ -14,4 +15,6 @@ urlpatterns = [
                   path('logout/', LogoutView.as_view(), name='logout'),
                   path('edit_profile/', ProfileUpdateView.as_view(), name='edit_profile'),
                   path('password_reset/', PasswordResetView.as_view(), name='password_reset'),
+                  path('users/', UserListView.as_view(), name='users'),
+                  path('users/<int:pk>/', UserDetailsView.as_view(), name='user_detail'),
               ] + main_url

@@ -1,0 +1,30 @@
+{% extends 'main/base.html' %}
+{% block content %}
+<div class="container">
+    <div class="card mb-4 rounded-3 shadow-sm text-center">
+        <div class="card-header py-3">
+            <h4 class="my-0 fw-normal">{{ object.email }}</h4>
+        </div>
+        <div class="card-body">
+            <h1 class="card-title">{{ object.get_full_name }}</h1>
+            <ul class="list-unstyled mt-3 mb-4">
+                <li>
+                    Статус:
+                    {% if object.is_active %}
+                    активен
+                    {% else %}
+                    неактивен
+                    {% endif %}
+                </li>
+            </ul>
+            {% if perms.users.change_user %}
+            <a href="#" class="btn btn-outline-primary">Редактировать</a>
+            {% endif %}
+            {% if perms.users.delete_user %}
+            <a href="#" class="btn btn-outline-danger">Удалить</a>
+            {% endif %}
+            <a href="{% url 'user:users' %}" class="btn btn-outline-secondary">Назад</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

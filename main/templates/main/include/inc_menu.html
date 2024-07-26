@@ -9,7 +9,8 @@
            href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Рассылка</a>
         <ul class="dropdown-menu">
             <li>
-                <a href="{% url 'main:mailings' %}" class="nav-link {% if current_url_name == 'mailings' %}active{% endif %}"
+                <a href="{% url 'main:mailings' %}"
+                   class="nav-link {% if current_url_name == 'mailings' %}active{% endif %}"
                    aria-current="page">Список рассылок</a>
             </li>
             <li>
@@ -50,6 +51,12 @@
     {% if user.is_superuser %}
     <li class="nav-item">
         <a href="{% url 'admin:index' %}" class="nav-link">Админка</a>
+    </li>
+    {% endif %}
+    {% if perms.users.view_user %}
+    <li class="nav-item">
+        <a href="{% url 'user:users' %}" class="nav-link {% if current_url_name == 'users' %}active{% endif %}">
+            Пользователи</a>
     </li>
     {% endif %}
     <li class="nav-item">

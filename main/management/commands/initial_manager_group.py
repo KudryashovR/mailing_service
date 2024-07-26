@@ -1,6 +1,8 @@
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import Group, Permission
 
+from users.models import User
+
 
 class Command(BaseCommand):
     def handle(self, *args, **kwargs):
@@ -17,4 +19,4 @@ class Command(BaseCommand):
         for perm in permissions:
             group.permissions.add(perm)
 
-        self.stdout.write(self.style.SUCCESS('Создана группа Менеджер'))
+        self.stdout.write(self.style.SUCCESS('Создана/обновлена группа Менеджер'))

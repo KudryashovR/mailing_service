@@ -1,7 +1,7 @@
 {% extends 'main/base.html' %}
 {% block content %}
 {% load custom_filters %}
-{% if user.is_staff %}
+{% if perms.main.add_blogpost %}
 <div class="row text-end">
     <div class="col">
         <a type="button" class="btn btn-primary mb-2" href="{% url 'main:blog_create' %}">Добавить статью</a>
@@ -26,9 +26,11 @@
                 <p>Количество просмотров: {{ article.view_count }}</p>
                 <a class="p-2 btn btn-outline-primary"
                    href="{% url 'main:blog_detail' article.pk %}">Подробнее</a>
-                {% if user.is_staff %}
+                {% if perms.main.change_blogpost %}
                 <a class="p-2 btn btn-outline-warning"
                    href="{% url 'main:blog_edit' article.pk %}">Редактировать</a>
+                {% endif %}
+                {% if perms.main.delete_blogpost %}
                 <a class="p-2 btn btn-outline-danger"
                    href="{% url 'main:blog_delete' article.pk %}">Удалить</a>
                 {% endif %}

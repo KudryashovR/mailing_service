@@ -294,7 +294,7 @@ class BlogListView(ListView):
         return context
 
 
-class BlogDetailView(LoginRequiredMixin, DetailView):
+class BlogDetailView(DetailView):
     model = BlogPost
 
     def get_object(self, *args, **kwargs):

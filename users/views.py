@@ -1,7 +1,8 @@
 from django.contrib import messages
 from django.contrib.auth import login
+from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.hashers import make_password
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.views import LoginView
 from django.core.mail import send_mail
 from django.http import HttpResponse
@@ -9,9 +10,10 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse_lazy
 from django.utils.crypto import get_random_string
 from django.views import View
-from django.views.generic import UpdateView
+from django.views.generic import UpdateView, ListView, DetailView
 
 from config.settings import EMAIL_HOST_USER
+from main.mixins import StaffRequiredMixin
 from users.forms import CustomUserCreationForm, ProfileForm
 from users.models import User
 
@@ -95,3 +97,32 @@ class PasswordResetView(View):
     def send_new_password_email(user, new_password):
         send_mail("Your new password", f"Your new password is: {new_password}", EMAIL_HOST_USER,
                   [user.email])
+
+
+class UserListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+    model = User
+    permission_required = 'users.view_user'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        if self.request.resolver_match:
+            context['current_url_name'] = self.request.resolver_match.url_name
+        else:
+            context['current_url_name'] = None
+
+        return context
+
+
+class UserDetailsView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
+    model = User
+    permission_required = 'users.view_user'
+
+
+@permission_required('users.set_active')
+def toggle_user_active(request, user_id):
+    user = get_object_or_404(User, pk=user_id)
+    user.is_active = not user.is_active
+    user.save()
+
+    return redirect('user:users')

@@ -17,9 +17,11 @@
                     <li>- {{ object.content }}</li>
                 </ul>
                 <p>Количество просмотров: {{ object.view_count }}</p>
-                {% if user.is_staff %}
+                {% if perms.main.change_blogpost %}
                 <a class="p-2 btn btn-outline-warning"
                    href="{% url 'main:blog_edit' object.pk %}">Редактировать</a>
+                {% endif %}
+                {% if perms.main.delete_blogpost %}
                 <a class="p-2 btn btn-outline-danger"
                    href="{% url 'main:blog_delete' object.pk %}">Удалить</a>
                 {% endif %}

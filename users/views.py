@@ -13,7 +13,6 @@ from django.views import View
 from django.views.generic import UpdateView, ListView, DetailView
 
 from config.settings import EMAIL_HOST_USER
-from main.mixins import StaffRequiredMixin
 from users.forms import CustomUserCreationForm, ProfileForm
 from users.models import User
 

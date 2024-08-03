@@ -4,7 +4,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
-from .mixins import OwnerRequiredMixin, EmailVerificationRequiredMixin, StaffRequiredMixin
+from .mixins import OwnerRequiredMixin, EmailVerificationRequiredMixin, StaffOrOwnerRequiredMixin
 from .models import Mailing, MailingAttempt, Client, BlogPost
 from .forms import MailingForm, ClientForm
 
@@ -54,7 +54,7 @@ class MailingListView(EmailVerificationRequiredMixin, ListView):
         return context
 
 
-class MailingDetailView(LoginRequiredMixin, StaffRequiredMixin, DetailView):
+class MailingDetailView(LoginRequiredMixin, StaffOrOwnerRequiredMixin, DetailView):
     """
     Представление для отображения деталей конкретной рассылки.
 

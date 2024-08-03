@@ -46,7 +46,7 @@ class EmailVerificationRequiredMixin:
         return super().dispatch(request, *args, **kwargs)
 
 
-class StaffRequiredMixin:
+class StaffOrOwnerRequiredMixin:
     owner_field = 'owner'
 
     def dispatch(self, request, *args, **kwargs):
@@ -62,10 +62,10 @@ class StaffRequiredMixin:
             perm = 'change'
         elif isinstance(self, DeleteView):
             perm = 'delete'
-        print(perm)
 
-        if (not request.user.is_staff and request.user != owner) or not request.user.has_perm(
+        if (not request.user.is_staff and request.user != owner) and not request.user.has_perm(
                 f'main.{perm}_{model_name}'):
+            print(request.user.is_staff, request.user, owner, request.user.has_perm(f'main.{perm}_{model_name}'))
             messages.info(request, "Доступ запрещен.")
 
             return redirect('main:home')

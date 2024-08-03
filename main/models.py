@@ -20,10 +20,13 @@ class Client(models.Model):
         first_name (models.CharField): Имя клиента, обязательное поле, максимальная длина 50 символов.
         second_name (models.CharField): Отчество клиента, необязательное поле, максимальная длина 50 символов.
         comment (models.TextField): Комментарий к клиенту, необязательное поле.
+        owner (models.ForeignKey): Владелец клиента, связь с моделью пользователя (User), обязательное поле.
 
     Методы:
         get_full_name(): Возвращает полное имя клиента.
         get_initials(): Возвращает инициалы клиента.
+        get_client_owner(): Возвращает владельца клиента.
+        get_unique_clients(): Статический метод, возвращает количество уникальных клиентов.
     """
 
     email = models.EmailField(unique=True, verbose_name='Email')
@@ -44,6 +47,13 @@ class Client(models.Model):
         return self.get_full_name()
 
     def get_client_owner(self):
+        """
+        Возвращает владельца клиента.
+
+        Возвращает:
+            User: Экземпляр пользователя, являющийся владельцем клиента.
+        """
+
         return self.owner
 
     class Meta:
@@ -72,6 +82,13 @@ class Client(models.Model):
 
     @staticmethod
     def get_unique_clients():
+        """
+        Статический метод, возвращает количество уникальных клиентов.
+
+        Возвращает:
+            int: Количество уникальных клиентов.
+        """
+
         unique_clients = Client.objects.count()
 
         if settings.CACHE_ENABLED:
@@ -95,15 +112,20 @@ class Mailing(models.Model):
         STATUS_CHOICES (list): Список возможных статусов рассылки.
         PERIODICITY_CHOICES (list): Список возможных периодичностей рассылки.
 
-    Атрибуты:
+    **Атрибуты:**
         title (models.CharField): Заголовок рассылки, обязательное поле, максимальная длина 255 символов.
         message (models.TextField): Содержание рассылки, обязательное поле.
-        status (models.CharField): Статус рассылки, обязательное поле, максимальная длина 10 символов, по умолчанию
-                                   'Новый'.
+        status (models.CharField): Статус рассылки, обязательное поле, максимальная длина 10 символов, по умолчанию 'Новый'.
         scheduled_time (models.DateTimeField): Дата и время отправки рассылки, обязательное поле.
-        periodicity (models.CharField): Периодичность рассылки, обязательное поле, максимальная длина 15 символов,
-                                        по умолчанию 'Ежедневно'.
+        periodicity (models.CharField): Периодичность рассылки, обязательное поле, максимальная длина 15 символов, по умолчанию 'Ежедневно'.
         clients (models.ManyToManyField): Список клиентов, которым будет отправлена рассылка.
+        owner (models.ForeignKey): Владелец рассылки, связь с моделью пользователя (User), обязательное поле.
+
+    Методы:
+        __str__(): Возвращает заголовок рассылки.
+        set_status_disregard(): Устанавливает статус рассылки 'Отклонен' и сохраняет изменения.
+        get_total_mailings(): Статический метод, возвращает общее количество рассылок.
+        get_active_mailings(): Статический метод, возвращает количество активных рассылок.
     """
 
     STATUS_CHOICES = [
@@ -149,6 +171,15 @@ class Mailing(models.Model):
 
     @staticmethod
     def get_total_mailings():
+        """
+        Возвращает общее количество рассылок.
+
+        Если включено кеширование, данные будут получены из кеша или сохранены в кеш при отсутствии.
+
+        Возвращает:
+            int: Общее количество рассылок.
+        """
+
         if settings.CACHE_ENABLED:
             key = 'total_mailings'
             cache_data = cache.get(key)
@@ -164,6 +195,15 @@ class Mailing(models.Model):
 
     @staticmethod
     def get_active_mailings():
+        """
+        Возвращает количество активных рассылок.
+
+        Если включено кеширование, данные будут получены из кеша или сохранены в кеш при отсутствии.
+
+        Возвращает:
+            int: Количество активных рассылок.
+        """
+
         if settings.CACHE_ENABLED:
             key = 'active_mailings'
             cache_data = cache.get(key)
@@ -179,6 +219,10 @@ class Mailing(models.Model):
         return Mailing.objects.filter(status='Новый').count() + Mailing.objects.filter(status='Отправлен').count()
 
     def set_status_disregard(self):
+        """
+        Устанавливает статус рассылки 'Отклонен' и сохраняет изменения.
+        """
+
         self.status = 'Отклонен'
         self.save()
 
@@ -188,11 +232,11 @@ class MailingAttempt(models.Model):
     Модель представляет попытку отправки рассылки.
 
     Атрибуты:
-        mailing (models.ForeignKey): Связь с моделью `Mailing`, обязательное поле. При удалении рассылки удаляются
-                                     связанные попытки отправки.
-        time (models.DateTimeField): Дата и время попытки отправки, автоматически устанавливаемое поле.
+        mailing (models.ForeignKey): Ссылка на модель Mailing, обязательное поле. При удалении рассылки
+                                     удаляются и связанные с ней попытки отправки.
+        time (models.DateTimeField): Дата и время попытки отправки, устанавливается автоматически при создании.
         status (models.CharField): Статус попытки отправки, обязательное поле, максимальная длина 10 символов.
-        log_message (models.TextField): Лог сообщения, дополнительное поле.
+        log_message (models.TextField): Лог сообщения, дополнительное поле с возможностью быть пустым.
     """
 
     mailing = models.ForeignKey(Mailing, on_delete=models.CASCADE, verbose_name='Рассылка')
@@ -201,9 +245,23 @@ class MailingAttempt(models.Model):
     log_message = models.TextField(verbose_name='Лог сообщения', **NULLABLE)
 
     def __str__(self):
+        """
+        Строковое представление объекта MailingAttempt, возвращает информацию о попытке отправки.
+
+        Возвращает:
+            str: Информация о попытке отправки рассылки с датой и временем отправки.
+        """
+
         return f'Попытка отправки рассылки {self.mailing.title} на {self.time}'
 
     def get_mailing_owner(self):
+        """
+        Возвращает владельца рассылки, к которой относится данная попытка отправки.
+
+        Возвращает:
+            User: Владелец рассылки.
+        """
+
         return self.mailing.owner
 
     class Meta:
@@ -212,6 +270,19 @@ class MailingAttempt(models.Model):
 
 
 class BlogPost(models.Model):
+    """
+    Модель представляет статью блога.
+
+    Атрибуты:
+        title (models.CharField): Наименование статьи, обязательное поле, максимальная длина 200 символов.
+        content (models.TextField): Содержание статьи, текстовое поле.
+        image (models.ImageField): Изображение, дополнительное поле. Поддерживает загрузку изображений
+                                   в каталог 'blog_images'. Поле может быть пустым и необязательным.
+        view_count (models.PositiveIntegerField): Количество просмотров статьи, поле с положительным числовым значением.
+        published_date (models.DateTimeField): Дата и время публикации статьи, автоматически устанавливается
+                                                    при создании.
+    """
+
     title = models.CharField(max_length=200, verbose_name='Наименование статьи')
     content = models.TextField(verbose_name='Содержание статьи')
     image = models.ImageField(upload_to='blog_images', **NULLABLE, verbose_name='Изображение')
@@ -219,6 +290,13 @@ class BlogPost(models.Model):
     published_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
+        """
+        Строковое представление объекта BlogPost, возвращает заголовок статьи.
+
+        Возвращает:
+            str: Заголовок статьи.
+        """
+
         return self.title
 
     class Meta:
@@ -227,6 +305,20 @@ class BlogPost(models.Model):
 
     @staticmethod
     def get_ramdom_articles(count):
+        """
+        Возвращает список случайных статей блога.
+
+        Параметры:
+            count (int): Количество случайных статей для возврата.
+
+        Возвращает:
+            QuerySet: Набор случайных статей блога.
+
+        Примечание:
+            Если в настройках включено кеширование, данные будут извлекаться из кеша с ключом 'articles'. Кэш
+            обновляется каждые 60 секунд.
+        """
+
         if settings.CACHE_ENABLED:
             key = 'articles'
             cache_data = cache.get(key)

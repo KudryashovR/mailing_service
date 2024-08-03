@@ -29,6 +29,17 @@ class MailingForm(forms.ModelForm):
 
 
 class ClientForm(forms.ModelForm):
+    """
+    Форма для создания и обновления экземпляров модели Client.
+
+    Атрибуты (из Meta-класса):
+        email (forms.EmailField): Поле для ввода email адреса клиента.
+        last_name (forms.CharField): Поле для ввода фамилии клиента.
+        first_name (forms.CharField): Поле для ввода имени клиента.
+        second_name (forms.CharField): Поле для ввода отчества клиента.
+        comment (forms.CharField): Поле для ввода комментария о клиенте.
+    """
+
     class Meta:
         model = Client
         fields = ['email', 'last_name', 'first_name', 'second_name', 'comment']

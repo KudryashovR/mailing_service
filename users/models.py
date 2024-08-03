@@ -107,6 +107,37 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractUser):
+    """
+    Модель пользователя с использованием электронной почты в качестве логина
+
+    Поля:
+        - email: Электронная почта. Уникальное поле.
+        - is_email_verified: Флаг подтверждения электронной почты. По умолчанию False.
+        - email_verification_token: Токен для подтверждения электронной почты. Генерируется автоматически.
+        - first_name: Имя пользователя. Максимальная длина 50 символов. Может быть пустым.
+        - last_name: Фамилия пользователя. Максимальная длина 50 символов. Может быть пустым.
+
+    Специальные атрибуты:
+        - USERNAME_FIELD: Поле, используемое в качестве логина (в данном случае 'email').
+        - REQUIRED_FIELDS: Обязательные поля для создания суперпользователя (пусто).
+
+    Методы:
+        - str(self): Возвращает строковое представление пользователя.
+        - get_full_name(self): Возвращает полное имя пользователя.
+        - send_verification_email(self): Отправляет письмо для подтверждения электронной почты.
+        - save(self, *args, **kwargs): Переопределяет метод сохранения, отправляя письмо для подтверждения электронной
+                                       почты при создании нового пользователя.
+
+    Классы:
+        - Meta:
+            - permissions: Дополнительные права для модели. В данном случае, право блокировать пользователей сервиса
+                           ('set_active').
+
+    Описание:
+        Эта модель расширяет стандартную модель пользователя, используемую в Django, с заменой имени пользователя
+        на электронную почту.
+    """
+
     username = None
     email = models.EmailField(verbose_name='Почта', unique=True)
     is_email_verified = models.BooleanField(default=False, verbose_name='Почта подтверждена')
@@ -134,6 +165,13 @@ class User(AbstractUser):
         return f'{self.first_name} {self.last_name}'
 
     def send_verification_email(self):
+        """
+        Отправка письма для подтверждения электронной почты
+
+        Описание:
+            Этот метод создает URL для подтверждения электронной почты и отправляет его на указанный электронный адрес.
+        """
+
         verification_url = f'{settings.SITE_URL}/user/verify-email/{self.email_verification_token}/'
         subject = 'Verify your email address'
         message = f'Please verify your email address by clicking the following link: {verification_url}'
@@ -142,6 +180,18 @@ class User(AbstractUser):
         print('message sent')
 
     def save(self, *args, **kwargs):
+        """
+        Сохранение модели пользователя
+
+        Описание:
+            Переопределяет метод сохранения модели, отправляя письмо для подтверждения электронной почты при создании
+            нового пользователя.
+
+        Параметры:
+            - args: Дополнительные позиционные аргументы.
+            - kwargs: Дополнительные именованные аргументы.
+        """
+
         is_new = self._state.adding
 
         super().save(*args, **kwargs)

@@ -1,5 +1,7 @@
+from django.core.cache import cache
 from django.db import models
 
+from config import settings
 from users.models import User
 
 NULLABLE = {
@@ -70,7 +72,19 @@ class Client(models.Model):
 
     @staticmethod
     def get_unique_clients():
-        return Client.objects.count()
+        unique_clients = Client.objects.count()
+
+        if settings.CACHE_ENABLED:
+            key = 'unique_clients'
+            cache_data = cache.get(key)
+
+            if cache_data is None:
+                cache_data = unique_clients
+                cache.set(key, cache_data, timeout=60)
+
+            return cache_data
+
+        return unique_clients
 
 
 class Mailing(models.Model):
@@ -135,10 +149,33 @@ class Mailing(models.Model):
 
     @staticmethod
     def get_total_mailings():
+        if settings.CACHE_ENABLED:
+            key = 'total_mailings'
+            cache_data = cache.get(key)
+
+            if cache_data is None:
+                total_mailings = Mailing.objects.count()
+                cache_data = total_mailings
+                cache.set(key, cache_data, timeout=60)
+
+            return cache_data
+
         return Mailing.objects.count()
 
     @staticmethod
     def get_active_mailings():
+        if settings.CACHE_ENABLED:
+            key = 'active_mailings'
+            cache_data = cache.get(key)
+
+            if cache_data is None:
+                active_mailings = Mailing.objects.filter(status='Новый').count() + Mailing.objects.filter(
+                    status='Отправлен').count()
+                cache_data = active_mailings
+                cache.set(key, cache_data, timeout=60)
+
+            return cache_data
+
         return Mailing.objects.filter(status='Новый').count() + Mailing.objects.filter(status='Отправлен').count()
 
     def set_status_disregard(self):
@@ -190,4 +227,15 @@ class BlogPost(models.Model):
 
     @staticmethod
     def get_ramdom_articles(count):
+        if settings.CACHE_ENABLED:
+            key = 'articles'
+            cache_data = cache.get(key)
+
+            if cache_data is None:
+                articles = BlogPost.objects.order_by('?')
+                cache_data = articles
+                cache.set(key, cache_data, timeout=60)
+
+            return cache_data[:count]
+
         return BlogPost.objects.order_by('?')[:count]

@@ -1,0 +1,47 @@
+[
+    {
+        "model": "main.blogpost",
+        "pk": 1,
+        "fields": {
+            "title": "Budget heart direction Mrs.",
+            "content": "Face seat pay wear poor born. Discuss world fight ball sort driver born.",
+            "published_date": "2009-09-15T21:40:30.111213Z"
+        }
+    },
+    {
+        "model": "main.blogpost",
+        "pk": 2,
+        "fields": {
+            "title": "Soft operation charge arm.",
+            "content": "Task back safe heavy. Share community area another those tree along.",
+            "published_date": "2011-06-12T18:30:17.891142Z"
+        }
+    },
+    {
+        "model": "main.blogpost",
+        "pk": 3,
+        "fields": {
+            "title": "Deep network matter partner.",
+            "content": "Country thus former account find just scene. Try central method reveal one.",
+            "published_date": "2010-03-28T13:45:57.378498Z"
+        }
+    },
+    {
+        "model": "main.blogpost",
+        "pk": 4,
+        "fields": {
+            "title": "Commercial voice successful.",
+            "content": "Throw without tree simple. Finally open large back wonder second.",
+            "published_date": "2011-03-21T12:50:36.759389Z"
+        }
+    },
+    {
+        "model": "main.blogpost",
+        "pk": 5,
+        "fields": {
+            "title": "Economy perhaps race up.",
+            "content": "Industry identify way cut weight. Remark official believe treat political.",
+            "published_date": "2011-06-24T10:35:14.236789Z"
+        }
+    }
+]

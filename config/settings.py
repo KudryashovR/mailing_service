@@ -170,3 +170,12 @@ LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = 'main:home'
 
 CHANGE_PASSWORD_URL = 'user:change_password'
+
+CACHE_ENABLED = True
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        'LOCATION': env('CACHES_LOCATION')
+    }
+}

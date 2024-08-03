@@ -3,6 +3,14 @@ from time import sleep
 
 
 class MainConfig(AppConfig):
+    """
+    Конфигурация приложения 'main'.
+
+    Атрибуты:
+    default_auto_field (str): Тип поля по умолчанию для автоинкрементных полей.
+    name (str): Имя приложения.
+    """
+
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'main'
 

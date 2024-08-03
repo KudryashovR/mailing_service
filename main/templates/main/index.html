@@ -1,0 +1,41 @@
+{% extends 'main/base.html' %}
+{% block content %}
+{% load custom_filters %}
+<div class="row">
+    <div class="col-3"></div>
+    <div class="col-6">
+        <p>Количество рассылок всего: {{ total_mailings }}</p>
+        <p>Количество активных рассылок: {{ active_mailings }}</p>
+        <p>Количество уникальных клиентов для рассылок: {{ unique_clients }}</p>
+        <hr>
+        <h2>О сервисе</h2>
+        <ul>
+            <div class="row">
+                {% for article in random_articles %}
+                <div class="col-3 text-center">
+                    <div class="card mb-4 box-shadow">
+                        <div class="card-header">
+                            <h4 class="my-0 font-weight-normal">{{ article.title }}</h4>
+                        </div>
+                        <div class="card-body">
+                            {% if article.image %}
+                            <img src="{{ article.image|media_redirection }}" class="img-fluid"
+                                 alt="{{ article.title }}">
+                            {% endif %}
+                            <p>{{ article.published_date }}</p>
+                            <ul class="list-unstyled mt-3 mb-4 text-start m-3">
+                                <li>- {{ article.content|truncatechars:100 }}</li>
+                            </ul>
+                            <p>Количество просмотров: {{ article.view_count }}</p>
+                            <a class="p-2 btn btn-outline-primary"
+                               href="{% url 'main:blog_detail' article.pk %}">Подробнее</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </ul>
+    </div>
+    <div class="col-3"></div>
+</div>
+{% endblock %}

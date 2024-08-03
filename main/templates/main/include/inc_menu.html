@@ -1,11 +1,16 @@
 <ul class="nav nav-pills">
-
+    <li>
+        <a href="{% url 'main:home' %}" class="nav-link {% if current_url_name == 'home' %}active{% endif %}"
+           aria-current="page">Главная</a>
+    </li>
+    {% if user.is_authenticated and user.is_email_verified %}
     <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle {% if current_url_name == 'home' or current_url_name == 'mailing_create' %}active{% endif %}"
+        <a class="nav-link dropdown-toggle {% if current_url_name == 'mailings' or current_url_name == 'mailing_create' %}active{% endif %}"
            href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Рассылка</a>
         <ul class="dropdown-menu">
             <li>
-                <a href="{% url 'main:home' %}" class="nav-link {% if current_url_name == 'home' %}active{% endif %}"
+                <a href="{% url 'main:mailings' %}"
+                   class="nav-link {% if current_url_name == 'mailings' %}active{% endif %}"
                    aria-current="page">Список рассылок</a>
             </li>
             <li>
@@ -34,7 +39,39 @@
            aria-current="page">Результаты
             рассылок</a>
     </li>
+    {% endif %}
     <li class="nav-item">
-        <a href="#" class="nav-link {% if current_url_name == '#' %}active{% endif %}">О сервисе</a>
+        <a href="{% url 'main:blog' %}" class="nav-link {% if current_url_name == 'blog' %}active{% endif %}">Блог</a>
     </li>
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+        <a href="{% url 'user:edit_profile' %}"
+           class="nav-link {% if current_url_name == 'profile' %}active{% endif %}">Профиль</a>
+    </li>
+    {% if user.is_superuser %}
+    <li class="nav-item">
+        <a href="{% url 'admin:index' %}" class="nav-link">Админка</a>
+    </li>
+    {% endif %}
+    {% if perms.users.view_user %}
+    <li class="nav-item">
+        <a href="{% url 'user:users' %}" class="nav-link {% if current_url_name == 'users' %}active{% endif %}">
+            Пользователи</a>
+    </li>
+    {% endif %}
+    <li class="nav-item">
+        <form method="post" action="{% url 'user:logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="nav-link">Выход</button>
+        </form>
+    </li>
+    {% else %}
+    <li class="nav-item">
+        <a href="{% url 'user:login' %}"
+           class="nav-link {% if current_url_name == 'login' %}active{% endif %}">Войти</a>
+    </li>
+    <li class="nav-item">
+        <a href="{% url 'user:register' %}" class="nav-link {% if current_url_name == 'register' %}active{% endif %}">Регистрация</a>
+    </li>
+    {% endif %}
 </ul>

@@ -1,0 +1,37 @@
+{% extends 'main/base.html' %}
+{% block content %}
+<table class="table table-hover">
+    {% for usr in object_list %}
+    {% if perms.users.view_user and not usr.is_superuser %}
+    <tr>
+        <td class="text-end">
+            <a href="{% url 'user:user_detail' usr.pk %}" class="action">{{ usr }}</a>
+        </td>
+        {% if perms.users.change_user %}
+        <td>
+            <a href="#"
+               class="btn btn-outline-light form-control">Редактировать</a>
+        </td>
+        {% endif %}
+        {% if perms.users.delete_user %}
+        <td>
+            <a href="#" class="btn btn-outline-danger form-control">Удалить</a>
+        </td>
+        {% endif %}
+        {% if perms.users.set_active %}
+        <td>
+            <a href="{% url 'user:user_toggle' usr.pk %}"
+               class="btn btn-outline-{% if usr.is_active %}danger{% else %}light{% endif %} form-control">
+                {% if usr.is_active %}
+                Заблокировать
+                {% else %}
+                Активировать
+                {% endif %}
+            </a>
+        </td>
+        {% endif %}
+    </tr>
+    {% endif %}
+    {% endfor %}
+</table>
+{% endblock %}

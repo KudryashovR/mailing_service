@@ -1,0 +1,15 @@
+{% extends 'main/base.html' %}
+{% block content %}
+<div class="row">
+    <div class="col-3"></div>
+    <div class="col-6">
+        <h1>Вы действительно хотите удалить статью {{ object.title }}</h1>
+        <form method="post">
+            {% csrf_token %}
+            <button class="p-2 btn btn-outline-danger" type="submit">Да</button>
+            <a class="p-2 btn btn-outline-primary" href="{% url 'main:blog' %}">Нет</a>
+        </form>
+    </div>
+    <div class="col-3"></div>
+</div>
+{% endblock %}

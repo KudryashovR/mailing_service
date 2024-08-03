@@ -1,7 +1,8 @@
 {% extends 'main/base.html' %}
 {% block content %}
 <table class="table table-hover">
-    {% for client in clients %}
+    {% for client in object_list %}
+    {% if client.get_client_owner == user %}
     <tr>
         <td>{{ client.get_initials }}</td>
         <td>{{ client.email }}</td>
@@ -13,6 +14,7 @@
         <td><a href="{% url 'main:client_delete' client.pk %}" class="btn btn-outline-danger form-control">Удалить</a>
         </td>
     </tr>
+    {% endif %}
     {% endfor %}
 </table>
 {% endblock %}

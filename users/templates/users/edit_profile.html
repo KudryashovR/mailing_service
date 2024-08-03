@@ -1,0 +1,16 @@
+{% extends 'main/base.html' %}
+{% block content %}
+{% load crispy_forms_tags %}
+<div class="row">
+    <div class="col-3"></div>
+    <div class="col-6">
+        <h1 class="text-center">Редактирование пользователя</h1>
+        <form method="POST">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <button class="btn btn-outline-light mt-2" type="submit">Сохранить</button>
+        </form>
+    </div>
+    <div class="col-3"></div>
+</div>
+{% endblock %}

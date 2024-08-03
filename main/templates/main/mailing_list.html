@@ -2,19 +2,31 @@
 {% block content %}
 <table class="table table-hover">
     {% for mailing in mailings %}
+    {% if mailing.owner == user or perms.main.view_mailing %}
     <tr>
         <td class="text-end">
             <a href="{% url 'main:mailing_detail' mailing.pk %}" class="action">{{ mailing.title }} -
                 {{mailing.scheduled_time|date:"DATETIME_FORMAT" }}</a>
         </td>
+        {% if mailing.owner == user or perms.main.change_mailing %}
         <td>
             <a href="{% url 'main:mailing_edit' mailing.pk %}"
                class="btn btn-outline-light form-control">Редактировать</a>
         </td>
+        {% endif %}
+        {% if mailing.owner == user or perms.main.delete_mailing %}
         <td>
             <a href="{% url 'main:mailing_delete' mailing.pk %}" class="btn btn-outline-danger form-control">Удалить</a>
         </td>
+        {% endif %}
+        {% if perms.main.set_status_disregard and mailing.status != 'Отклонен' %}
+        <td>
+            <a href="{% url 'main:disregard_mailing' mailing.pk %}" class="btn btn-outline-danger form-control">
+                Отключить</a>
+        </td>
+        {% endif %}
     </tr>
+    {% endif %}
     {% endfor %}
 </table>
 {% endblock %}
